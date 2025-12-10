@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+<head>
+  <title>Public Files</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<nav class="navbar">
+  <h2>SecureFile</h2>
+  ${localStorage.getItem('token') ? '<button onclick="location.href=\'dashboard.html\'">Dashboard</button>' : '<a href="login.html">Login</a>'}
+</nav>
+
+<div class="container" style="margin-top:100px;">
+  <h2 style="text-align:center; color:white;">Public Files - Free Download</h2>
+  <div id="list" class="grid"></div>
+</div>
+
+<script>
+fetch('http://localhost:5000/api/files/public')
+.then(r => r.json())
+.then(files => {
+  const list = document.getElementById('list');
+  if (files.length === 0) {
+    list.innerHTML = '<p style="color:white; text-align:center;">No public files yet</p>';
+    return;
+  }
+  files.forEach(f => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `
+      <h3>${f.originalName || f.filename}</h3>
+      <p>${(f.size/1024/1024).toFixed(2)} MB</p>
+      <button onclick="location.href='http://localhost:5000/api/files/download/${f._id}'" style="background:#28a745;">
+        Download Now
+      </button>
+    `;
+    list.appendChild(card);
+  });
+});
+</script>
+</body>
+</html>
