@@ -1,36 +1,24 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>Register</title>
-  <style>
-    body { font-family: Arial; max-width: 400px; margin: 100px auto; background: #fff; padding: 30px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-    input, button { width: 100%; padding: 100%; padding: 12px; margin: 8px 0; border-radius: 5px; border: 1px solid #ccc; }
-    button { background: #28a745; color: white; font-size: 16px; cursor: pointer; }
-  </style>
-</head>
-<body>
-  <h2>Create Account</h2>
-  <input type="text" id="username" placeholder="Username" required />
-  <input type="email" id="email" placeholder="Email" required />
-  <input type="password" id="password" placeholder="Password" required />
-  <button onclick="register()">Register</button>
-  <p id="msg" style="color: green;"></p>
-  <p>Already have account? <a href="login.html">Login here</a></p>
 
-  <script>
-    async function register() {
-      const res = await fetch('http://localhost:5000/api/auth/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          username: document.getElementById('username').value,
-          email: document.getElementById('email').value,
-          password: document.getElementById('password').value
-        })
-      });
-      const data = await res.json();
-      document.getElementById('msg').textContent = data.msg || "Success! Go to Login";
-    }
-  </script>
+<head>
+    <title>Register</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <div class="auth-container">
+        <div class="auth-box">
+            <h2>Create Account</h2>
+            <input type="text" id="username" placeholder="Username" required>
+            <input type="email" id="email" placeholder="Email" required>
+            <input type="password" id="password" placeholder="Password (6+ chars)" required>
+            <button onclick="register()">Register</button>
+            <p id="msg"></p>
+            <p>Have an account? <a href="login.html">Login</a></p>
+        </div>
+    </div>
+    <script src="js/app.js"></script>
 </body>
+
 </html>

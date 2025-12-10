@@ -1,25 +1,37 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>Dashboard</title>
-  <style>
-    body { font-family: Arial; margin: 50px; background: #e8f5e8; text-align: center; }
-    button { padding: 10px 20px; background: #dc3545; color: white; border: none; border-radius: 5px; cursor: pointer; }
-  </style>
-</head>
-<body>
-  <h1>Welcome to Your Dashboard</h1>
-  <h2>You are logged in!</h2>
-  <p>Day 1 Completed Successfully</p>
-  <button onclick="localStorage.clear(); location.href='login.html'">Logout</button>
-  <hr>
-  <h3>Tomorrow: File Upload + Public/Private + MongoDB</h3>
 
-  <script>
-    if (!localStorage.getItem('token')) {
-      alert('Please login first!');
-      location.href = 'login.html';
-    }
-  </script>
+<head>
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <nav class="navbar">
+        <h2>SecureFile</h2>
+        <button onclick="logout()">Logout</button>
+    </nav>
+
+    <div class="container dashboard">
+        <h1>Welcome Back!</h1>
+        <p>You are logged in securely</p>
+        <div class="grid">
+            <a href="upload.html" class="card">
+                <h3>Upload File</h3>
+                <p>PDF & MP4 • Max 20MB</p>
+            </a>
+            <a href="myfiles.html" class="card">
+                <h3>My Files</h3>
+                <p>View & Delete</p>
+            </a>
+            <a href="downloads.html" class="card">
+                <h3>Public Files</h3>
+                <p>Download anyone's public file</p>
+            </a>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
 </body>
+
 </html>
