@@ -1,4 +1,4 @@
-const API = 'http://localhost:5000/api/auth';
+const API = 'http://localhost:5000/api';
 
 // Helper
 const msg = (id, text, type = 'error') => {
