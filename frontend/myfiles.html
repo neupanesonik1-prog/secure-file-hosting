@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>My Files</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<nav class="navbar">
+  <h2>SecureFile</h2>
+  <button onclick="localStorage.clear(); location.href='login.html'">Logout</button>
+</nav>
+
+<div class="container" style="margin-top:100px;">
+  <h2 style="text-align:center; color:white;">My Files</h2>
+  <div id="files"></div>
+  <p style="text-align:center; margin-top:30px;">
+    <a href="upload.html" style="background:#28a745; color:white; padding:12px 24px; border-radius:8px; text-decoration:none;">+ Upload New</a>
+  </p>
+</div>
+
+<script>
+if (!localStorage.getItem('token')) location.href = 'login.html';
+
+fetch('http://localhost:5000/api/files/myfiles', {
+  headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+})
+.then(r => r.json())
+.then(files => {
+  const div = document.getElementById('files');
+  if (files.length === 0) {
+    div.innerHTML = '<p style="color:white; text-align:center;">No files uploaded yet</p>';
+    return;
+  }
+  files.forEach(f => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `
+      <h3>${f.originalName || f.filename}</h3>
+      <p>${(f.size/1024/1024).toFixed(2)} MB • ${f.privacy}</p>
+      <button onclick="location.href='http://localhost:5000/api/files/download/${f._id}'">Download</button>
+      <button onclick="deleteFile('${f._id}')" style="background:#dc3545; margin-left:10px;">Delete</button>
+      ${f.privacy==='private' ? `<p>Share: download.html?id=${f._id}</p>` : ''}
+    `;
+    div.appendChild(card);
+  });
+});
+
+function deleteFile(id) {
+  if (confirm('Delete file?')) {
+    fetch(`http://localhost:5000/api/files/${id}`, {
+      method: 'DELETE',
+      headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+    }).then(() => location.reload());
+  }
+}
+</script>
+</body>
+</html>

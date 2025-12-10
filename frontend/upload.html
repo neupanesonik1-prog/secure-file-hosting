@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Upload - SecureFile</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<nav class="navbar">
+  <h2>SecureFile</h2>
+  <button onclick="localStorage.clear(); location.href='login.html'">Logout</button>
+</nav>
+
+<div class="container" style="margin-top:100px; text-align:center;">
+  <div class="auth-box" style="max-width:500px; margin:0 auto;">
+    <h2>Upload File</h2>
+    <p>PDF & MP4 only • Max 20MB</p>
+    
+    <input type="file" id="file" accept=".pdf,.mp4" required style="padding:15px; border:2px dashed #667eea; border-radius:10px; width:100%; margin:20px 0;">
+    
+    <div style="margin:20px 0;">
+      <label><input type="radio" name="privacy" value="public" checked> Public</label> &nbsp;&nbsp;
+      <label><input type="radio" name="privacy" value="private"> Private (share link only)</label>
+    </div>
+    
+    <button onclick="uploadFile()" style="background:#28a745; padding:15px 40px; font-size:18px;">Upload Now</button>
+    <p id="msg" style="margin-top:20px; font-weight:bold;"></p>
+  </div>
+</div>
+
+<script>
+if (!localStorage.getItem('token')) location.href = 'login.html';
+
+async function uploadFile() {
+  const file = document.getElementById('file').files[0];
+  const privacy = document.querySelector('input[name="privacy"]:checked').value;
+  if (!file) return alert('Choose a file');
+
+  const form = new FormData();
+  form.append('file', file);
+  form.append('privacy', privacy);
+
+  document.getElementById('msg').innerHTML = 'Uploading...';
+
+  const res = await fetch('http://localhost:5000/api/files/upload', {
+    method: 'POST',
+    headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` },
+    body: form
+  });
+
+  const data = await res.json();
+  if (res.ok) {
+    document.getElementById('msg').style.color = 'green';
+    document.getElementById('msg').innerHTML = 
+      privacy === 'private' 
+        ? `Private file uploaded!<br>Share link: <a href="download.html?id=${data.file._id}" style="color:white;">Click here</a>`
+        : 'Public file uploaded!';
+  } else {
+    document.getElementById('msg').style.color = 'red';
+    document.getElementById('msg').textContent = data.msg;
+  }
+}
+</script>
+</body>
+</html>
